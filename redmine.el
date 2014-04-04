@@ -29,7 +29,7 @@
 ;;; Commentary:
 
 ;; redmine.el is an utility for redmine.el
-;; You can see lists of issues, activity and revisions with anything.el,
+;; You can see lists of issues, activity and revisions with helm,
 ;;   and view the detail with your browser.
 
 ;;; Commands:
@@ -55,7 +55,7 @@
 
 ;;; Code:
 
-(require 'anything)
+(require 'helm)
 (require 'xml)
 (require 'url)
 (eval-when-compile (require 'cl))
@@ -65,7 +65,7 @@
 ;;====================
 (defvar redmine-project nil "Use this project as default")
 (defvar redmine-project-alist '(nil) "Your Redmines assoc list")
-(defvar anything-redmine-buffer-name "*anything-redmine*")
+(defvar helm-redmine-buffer-name "*helm-redmine*")
 
 ;;====================
 ;; For XML
@@ -118,7 +118,7 @@
          (remove-if (lambda (e) (equal name (car e))) redmine-project-alist))))
 
 (defun redmine-show-anything (lbl action &optional project)
-  (anything
+  (helm-other-buffer
    `(((name . ,lbl)
       (candidates . ,(redmine-project-entries action project))
       (candidate-transformer . (lambda (candidates)
@@ -128,7 +128,7 @@
       (volatile)
       (migemo)
       (action . browse-url)))
-   nil nil nil nil anything-redmine-buffer-name))
+   helm-redmine-buffer-name))
 
 ;;====================
 ;; Main
@@ -147,7 +147,7 @@
 
 (defun redmine-select-project ()
   (interactive)
-  (anything
+  (helm
    `(((name . "Select Project")
       (candidates . ,(mapcar 'car redmine-project-alist))
       (volatile)
